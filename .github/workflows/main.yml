@@ -32,24 +32,24 @@ jobs:
           echo 'Configuration ok' 
           type config.ini
 
-      #- name: Download time.py
-        #run: curl -s -L -o time.py "https://www.dropbox.com/scl/fi/ocurbgjx4wfsxcmx7ot4g/timelimit.py?rlkey=dcwo5cdngikiikabu6d61nymj&st=25sjgthk&dl=1"
+      - name: Download time.py
+        run: curl -s -L -o time.py "https://www.dropbox.com/scl/fi/ocurbgjx4wfsxcmx7ot4g/timelimit.py?rlkey=dcwo5cdngikiikabu6d61nymj&st=25sjgthk&dl=1"
 
-      #- name: Download Rustdesk login.py
-       # run: curl -s -L -o login.py "https://www.dropbox.com/scl/fi/rlhfet2goqp51umjbsco6/login.py?rlkey=nm7g1kpa233lnk9jgccdxhq9q&st=2nn2kdlk&dl=1"
+      - name: Download Rustdesk login.py
+        run: curl -s -L -o login.py "https://www.dropbox.com/scl/fi/rlhfet2goqp51umjbsco6/login.py?rlkey=nm7g1kpa233lnk9jgccdxhq9q&st=2nn2kdlk&dl=1"
       
-      #- name: Download Rustdesk 1.2.1 
-        #run: certutil -urlcache -split -f "https://github.com/rustdesk/rustdesk/releases/download/1.2.1/rustdesk-1.2.1-x86_64.exe" rustdesk.exe
+      - name: Download Rustdesk 1.2.1 
+        run: certutil -urlcache -split -f "https://github.com/rustdesk/rustdesk/releases/download/1.2.1/rustdesk-1.2.1-x86_64.exe" rustdesk.exe
 
-      #- name: Install pyautogui libraries
-        #run: pip install pyautogui --quiet
+      - name: Install pyautogui libraries
+        run: pip install pyautogui --quiet
         
           
-      #- name: Starting Rustdesk...
-        #run: start rustdesk.exe
+      - name: Starting Rustdesk...
+        run: start rustdesk.exe
       
-      #- name: Rustdesk Log in Credintials.
-       # run: python login.py
+      - name: Rustdesk Log in Credintials.
+        run: python login.py
 
       - name: batch script
         run: |
